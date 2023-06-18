@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>To-Do List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="mb-4">To-Do List</h1>
+    <form id="taskForm">
+      <div class="form-group">
+        <input type="text" class="form-control" id="taskInput" placeholder="Ajouter une tâche">
+      </div>
+      <button type="submit" class="btn btn-primary">Ajouter</button>
+    </form>
+    <ul id="taskList" class="list-group mt-4">
+    </ul>
+  </div>
+  
+  <script>
+    // Variables globales
+    const taskForm = document.getElementById('taskForm');
+    const taskInput = document.getElementById('taskInput');
+    const taskList = document.getElementById('taskList');
+    
+    // Écouter l'événement de soumission du formulaire
+    taskForm.addEventListener('submit', addTask);
+    
+    // Fonction pour ajouter une tâche
+    function addTask(event) {
+      event.preventDefault();
+      const taskText = taskInput.value.trim();
+      if (taskText !== '') {
+        const task = {
+          id: Date.now(),
+          text: taskText,
+          completed: false
+        };
+        taskInput.value = '';
+        renderTask(task);
+      }
+    }
+    
+    // Fonction pour afficher une tâche
+    function renderTask(task) {
+      const listItem = document.createElement('li');
+      listItem.className = 'list-group-item';
+      listItem.id = task.id;
+      listItem.innerHTML = `
+        <span>${task.text}</span>
+        <div class="btn-group float-right">
+          <button type="button" class="btn btn-success" onclick="completeTask(${task.id})">Terminer</button>
+          <button type="button" class="btn btn-secondary" onclick="editTask(${task.id})">Modifier</button>
+          <button type="button" class="btn btn-dark" onclick="supTask(${task.id})">supprimer</button>
+
+        </div>
+      `;
+      if (task.completed) {
+        listItem.style.backgroundColor = 'green';
+      }
+      taskList.appendChild(listItem);
+    }
+    
+    // Fonction pour terminer une tâche
+    function completeTask(taskId) {
+      const listItem = document.getElementById(taskId);
+      listItem.style.backgroundColor = 'green';
+      listItem.querySelector('.btn-success').remove();
+      listItem.querySelector('.btn-secondary').remove();
+      listItem.querySelector('span').innerHTML += ' (Terminée)';
+    }
+    
+    // Fonction pour modifier une tâche
+    function editTask(taskId) {
+      const listItem = document.getElementById(taskId);
+      const taskText = listItem.querySelector('span').innerHTML;
+      const newText = prompt('Modifier la tâche :', taskText);
+      if (newText && newText.trim() !== '') {
+        listItem.querySelector('span').innerHTML = newText;
+      }
+    }
+    //fonction pour supprimer une tache
+    function supTask (taskId) {
+        const listItem =document.getElementById(taskId);
+        listItem.style.backgroundColor = 'dark';
+        listItem.querySelector('.btn-dark').remove();
+        listItem.querySelector('.btn-secondary').remove();
+        listItem.querySelector('span').innerHTML += ' (supprimer)';
+
+    } 
+  </script>
+</body>
+</html>
+
